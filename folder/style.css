@@ -1,11 +1,17 @@
 .total {
     border: 1px solid;
-    background-color: #f0f0f0; /* 박스 배경 색상 */
+    background-color: #f0f0f0;
+    /* 박스 배경 색상 */
     width: 800px;
     margin: 0 auto;
-    border-radius: 10px; /* 모서리 둥글게 */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    height: 100vh; /* 박스 높이 설정 */
+    /* padding: 20px; */
+    /* 내부 여백 */
+    border-radius: 10px;
+    /* 모서리 둥글게 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* 그림자 효과 */
+    height: 100vh;
+    /* 박스 높이 설정 */
     box-sizing: border-box;
 }
 
@@ -105,10 +111,4 @@ footer {
     color: #fff;
     text-decoration: none;
     padding: 10px;
-}
-
-/* 전화번호 리스트 부분 */
-.phone-list ul li {
-    margin : 10px;
-
 }
