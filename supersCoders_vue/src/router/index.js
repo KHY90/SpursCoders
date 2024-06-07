@@ -1,5 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AboutView from '../views/AboutView.vue'
+import FoodView from '../views/FoodView.vue'
+import BarView from '../views/BarView.vue'
+import HospitalView from '../views/HospitalView.vue'
+import PharmacyView from '../views/PharmacyView.vue'
+import MallView from '../views/MallView.vue'
+import BankView from '../views/BankView.vue'
+
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,40 +15,39 @@ const router = createRouter({
     {
       path: '/',
       name: 'search',
-      // searchResult 컴포넌트가 정의되지 않아 주석 처리합니다.
-      // component: searchResult
+      component: AboutView
     },
     {
       path: '/food',
       name: 'food',
-      component: AboutView
+      component: FoodView
     },
     {
       path: '/bar',
       name: 'bar',
-      component: AboutView
+      component: BarView
     },
     {
       path: '/hospital',
       name: 'hospital',
-      component: AboutView
+      component: HospitalView
     },
     {
       path: '/pharmacy',
       name: 'pharmacy',
-      component: AboutView
+      component: PharmacyView
     },
     {
       path: '/mall',
       name: 'mall',
-      component: AboutView
+      component: MallView
     },
     {
       path: '/bank',
       name: 'bank',
-      component: AboutView
+      component: BankView
     },
   ]
 })
 
-export default router
+export default router;

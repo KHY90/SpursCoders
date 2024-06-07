@@ -1,99 +1,409 @@
-<script>
-// Vue Router import
-import { RouterLink } from 'vue-router';
-
-export default {
-  data() {
-    return {
-      location: '위치 알 수 없음',
-      logoSrc: './1.png',
-      locationIconSrc: './Location.png',
-      restaurantIconSrc: 'https://icons.iconarchive.com/icons/aniket-suvarna/box-regular/256/bx-restaurant-icon.png',
-      barIconSrc: 'https://icons.iconarchive.com/icons/icons8/windows-8/256/Food-Bar-icon.png',
-      hospitalIconSrc: 'https://icons.iconarchive.com/icons/iconoir-team/iconoir/256/hospital-icon.png',
-      pharmacyIconSrc: 'https://icons.iconarchive.com/icons/erix-subyarko/medical/256/Pharmacy-Pill-Drug-Bottle-Medicine-icon.png',
-      cartIconSrc: 'https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-mono/256/Shopping-Cart-icon.png',
-      bankIconSrc: 'https://icons.iconarchive.com/icons/iconsmind/outline/256/Bank-icon.png'
-    };
-  },
-  components: {
-    RouterLink
-  }
-};
-</script>
-
 <template>
   <div class="total">
+    <!-- 헤더 부분 -->
     <header>
       <div class="nav-container">
         <div class="logo">
-          <img :src="logoSrc" alt="Logo">
+          <img src="./assets/1.png" alt="Logo">
         </div>
-
         <div class="right-section">
           <div class="location">
-            <div>{{ location }}</div>
-            <div><img :src="locationIconSrc" alt="Location Icon"></div>
+            <div>위치 알 수 없음</div>
+            <div>
+              <img src="./assets/Location.png" alt="Location Icon">
+            </div>
           </div>
         </div>
       </div>
-
       <div class="search-icon-box">
         <div class="search-icon">
-          <img src="assets/Team.png" alt="Search Icon">
+          <img src="./assets/Team.png" alt="Search Icon">
         </div>
       </div>
-
       <div class="search-container">
         <div class="search-box">
-          <nav>
-            <input type="text" placeholder="search">
-            <a href="#" class="clear">✖</a>
-            <router-link to="/" class="button">검색</router-link>
-          </nav>
+          <input type="text" placeholder="search">
+          <a href="#" class="clear">✖</a>
+          <button class="button">검색</button>
         </div>
       </div>
     </header>
-
+    
+    <!-- 메인 컨테이너 부분 -->
     <section class="main-container">
-      <nav>
-        <div class="sub-container">
-          <div class="first">
-            <div>
-              <router-link to="/food"><img :src="restaurantIconSrc" alt="음식점"></router-link>
-            </div>
-            <div>
-              <router-link to="/bar"><img :src="barIconSrc" alt="술집"></router-link>
-            </div>
-          </div>
-
-          <div class="second">
-            <div>
-              <router-link to="/hospital"><img :src="hospitalIconSrc" alt="병원"></router-link>
-            </div>
-            <div>
-              <router-link to="/pharmacy"><img :src="pharmacyIconSrc" alt="약국"></router-link>
-            </div>
-          </div>
-
-          <div class="third">
-            <div>
-              <router-link to="/mall"><img :src="cartIconSrc" alt="쇼핑몰"></router-link>
-            </div>
-            <div>
-              <router-link to="/bank"><img :src="bankIconSrc" alt="은행"></router-link>
-            </div>
+      <div class="sub-container">
+        <div class="first">
+          <div @click="goToCategory(category.path)" v-for="(category, index) in categories" :key="index">
+            <a>
+              <img :src="category.iconSrc" :alt="category.name">
+            </a>
           </div>
         </div>
-      </nav>
+      </div>
     </section>
+
+
+    <!-- 푸터 부분 -->
     <footer>
       <nav class="footer-nav">
-        <a href="#">홈</a>
-        <a href="#">로그아웃</a>
+        <router-link to="/">홈</router-link>
+        <router-link to="/login">로그아웃</router-link>
       </nav>
     </footer>
   </div>
 </template>
 
-<style scoped></style>
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      categories: [
+        { name: '음식점', path: '/category/food', iconSrc: 'https://icons.iconarchive.com/icons/aniket-suvarna/box-regular/256/bx-restaurant-icon.png' },
+        { name: '술집', path: '/category/bar', iconSrc: 'https://icons.iconarchive.com/icons/icons8/windows-8/256/Food-Bar-icon.png' },
+        { name: '병원', path: '/category/hospital', iconSrc: 'https://icons.iconarchive.com/icons/iconoir-team/iconoir/256/hospital-icon.png' },
+        { name: '약국', path: '/category/pharmacy', iconSrc: 'https://icons.iconarchive.com/icons/erix-subyarko/medical/256/Pharmacy-Pill-Drug-Bottle-Medicine-icon.png' },
+        { name: '쇼핑몰', path: '/category/mall', iconSrc: 'https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-mono/256/Shopping-Cart-icon.png' },
+        { name: '은행', path: '/category/bank', iconSrc: 'https://icons.iconarchive.com/icons/iconsmind/outline/256/Bank-icon.png' }
+      ]
+    };
+  },
+  methods: {
+    goToCategory(path) {
+      this.$router.push(path);
+    }
+  }
+};
+</script>
+
+
+
+<style scoped>
+body {
+    font-family: 'IBM Plex Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.total {
+    border: 1px solid;
+    background-color: #f0f0f0;
+    /* 박스 배경 색상 */
+    width: 800px;
+    margin: 0 auto;
+    /* padding: 20px; */
+    /* 내부 여백 */
+    border-radius: 10px;
+    /* 모서리 둥글게 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* 그림자 효과 */
+    height: 100vh;
+    /* 박스 높이 설정 */
+    box-sizing: border-box;
+}
+
+header {
+    background: -webkit-linear-gradient(right,  #f7a061, #dc2a2a);
+    border-radius: 10px 10px 0 0;
+    height: 85px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+  
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.login {
+    display: flex;
+    align-items: center;
+    
+}
+
+.login a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #ffffff;
+    color: #ff007f;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    
+}
+
+.login a:hover {
+    background-color: #ff007f;
+    color: #ffffff;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 헤더 오른쪽에 정렬되도록 수정 */
+    width: 80%; /* 헤더의 80%의 너비를 차지하도록 설정 */
+    
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    margin : 5px 10px 0 0;
+}
+
+.location img {
+    height: 20px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.search-container {
+    width: 100%;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 100%;
+    padding: 0px 0px;
+    height: 70%;
+   
+}
+
+.search-icon-box {
+    position: absolute;
+    left: 80px;
+    top: 75px;
+    border: 1px solid #ccc;
+    transform: translateY(-50%);
+}
+
+.search-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+   
+}
+
+.search-icon img {
+    height: 43px;
+    width: 50px;
+    border: 1px solid;
+    background-color: white;
+    margin-top: 12px;
+    border-radius: 20%;
+   
+}
+
+.search-box img {
+    height: 20px;
+    margin-right: 10px;
+}
+
+.search-box input[type="text"] {
+    
+    border: none;
+    outline: none;
+    width: calc(100% - 50px); /* 아이콘의 크기만큼 너비를 줄입니다. */
+    padding: 10px;
+    border-radius: 20px;
+}
+.search-box .clear {
+    color: #ff007f;
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.search-box .button {
+    background-color: #fcfbf9;
+    color: black;
+    border: none;
+    padding: 10px 17px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 12px;
+
+    display: inline-block;
+   
+    transition: background-color 0.3s ease;
+    height: 60%;
+    
+}
+.search-box .button:hover {
+    background-color: #e68900;
+}
+
+
+/* 입력 창과 버튼 스타일 */
+.input {
+    text-align: right;
+    padding: 10px 10px;
+}
+
+.input input[type="text"] {
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 70%;
+    box-sizing: border-box;
+}
+
+.input .button {
+    background-color: #1100ffad;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.input .button:hover {
+    background-color: #0a00dd;
+    border: 1px solid #0a00dd;
+}
+
+.input-container {
+    text-align: center;
+}
+
+.button {
+    /* padding: 10px 20px; */
+    background-color: #1100ffad;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+
+.main-container {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    height: 70vh;
+    padding: 10px 10px;
+}
+
+/* 이미지 사이즈 조정 */
+.sub-container div a img {
+    width: 50%;
+    /* 이미지 너비 */
+    height: auto;
+    /* 높이 자동 조정 */
+    padding: 10px;
+}
+
+/* 이미지 간격 조정 */
+.first a {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    border: 1px solid #f7a061;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+.second a {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    border: 1px solid #f7a061;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.third a {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    border: 1px solid #f7a061;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-container div {
+    display: flex;
+    justify-content: space-around;
+    /* 이미지들을 가운데 정렬하고 간격을 주기 위해 */
+    margin-bottom: auto;
+    /* 그리드 아래 여백 */
+   margin-left: 60px;
+    margin-right: 10px;
+}
+
+/* 컨테이너 간 간격 조정 */
+.sub-container {
+    margin-top: auto;
+    /* 컨테이너 위 여백 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Footer 스타일 */
+footer {
+    border-radius: 0 0 10px 10px;
+    background: -webkit-linear-gradient(right,  #f7a061, #dc2a2a);
+    padding: 15px;
+    text-align: center;
+}
+
+/* Footer 네비게이션바 스타일 */
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+}
+
+.footer-nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.sub-container:hover {
+    background-color: #e0e0e0;
+    transition: background-color 0.3s ease; 
+
+}
+
+.sub-container div a {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.sub-container div a:hover {
+    transform: scale(1.1);
+    background-color: #f7bcbc;
+    border-radius: 10px;
+}
+
+</style>
