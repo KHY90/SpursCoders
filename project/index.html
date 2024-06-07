@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전화번호부</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
+</head>
+
+<!-- 
+    로그인 창에서 입력받은 id 가 main 페이지 header 왼쪽에 연동되게 하기
+    즐겨찾기 기능 팝업창으로 만들기
+    카카오맵 api 연결
+    맵 아래 전화번호 출력창
+    로그아웃누르면  login 창으로 나가게하기
+    홈 = 홈으로
+    공유 기능
+ -->
+
+<body>
+    <div class="total">
+        <header>
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="image/1.png" alt="Logo"> <!-- 로고 이미지를 여기에 추가해주세요 -->
+                </div>
+               
+                <div class="right-section">
+                    <div class="location">
+                        <div>
+                        위치 알 수 없음
+                        </div>
+                        <div>
+                        <img src="image/Location.png" alt="Location Icon"> <!-- 위치 아이콘 이미지를 여기에 추가해주세요 -->
+                    </div>
+                </div>
+            </div>
+            </div>
+          
+            <div class="search-icon-box">
+            <div class="search-icon">
+                <img src="image/Team.png" alt="Search Icon">
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                  
+                    <input type="text" placeholder="search">
+                    <a href="#" class="clear">✖</a>
+                    <a href="#" class="button">검색</a>
+                </div>
+            </div>
+
+    
+        </header>
+        <section class="main-container">
+
+            <div class="sub-container">
+                <div class="first">
+                    <div>
+                        <a href="index2.html">
+                            <img src="https://icons.iconarchive.com/icons/aniket-suvarna/box-regular/256/bx-restaurant-icon.png"
+                                alt="음식점">
+                        </a>
+                    </div>
+                    <div>
+                        <a href="#"><img
+                                src="https://icons.iconarchive.com/icons/icons8/windows-8/256/Food-Bar-icon.png"
+                                alt="술집"></a>
+                    </div>
+                </div>
+                <div class="second">
+                    <div>
+                        <a href="#">
+                            <img src="https://icons.iconarchive.com/icons/iconoir-team/iconoir/256/hospital-icon.png"
+                                alt="병원"></a>
+                    </div>
+                    <div>
+                        <a href="#"><img
+                                src="https://icons.iconarchive.com/icons/erix-subyarko/medical/256/Pharmacy-Pill-Drug-Bottle-Medicine-icon.png"
+                                alt="약국">
+                        </a>
+                    </div>
+                </div>
+                <div class="third">
+                    <div>
+                        <a href="#"><img
+                                src="https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-mono/256/Shopping-Cart-icon.png"
+                                alt="쇼핑몰"></a>
+                    </div>
+                    <div>
+                        <a href="#"><img src="https://icons.iconarchive.com/icons/iconsmind/outline/256/Bank-icon.png"
+                                alt="은행"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <nav class="footer-nav">
+                <a href="#">홈</a>
+                <a href="#">로그아웃</a>
+            </nav>
+        </footer>
+
+    </div>
+</body>
+
+</html>
