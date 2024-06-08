@@ -17,18 +17,33 @@
                     <div>
                         <img src="https://img.icons8.com/?size=100&id=63207&format=png&color=000000" alt="corectgps">
                     </div>
-                    <div class="serch">
-                        <input type="text" placeholder="위치를 입력하세요">
-                        <button class="button">검 색</button>
+                    <div class="search">
+                        <input type="text" placeholder="위치를 입력하세요" v-model="keyword">
+                        <button class="button" @click="search">검 색</button>
                     </div>
                 </div>
             </header>
+
             <div class="totalbody">
-                <div id="map" class="map"></div>
+                <!-- 지도를 표시할 div -->
+                <div ref="map" class="map"></div>
+
+                <!-- 마커 정보 리스트 -->
+                <div class="marker-list">
+                    <ul>
+                        <!-- 마커 정보는 이곳에 표시됩니다 -->
+                        <li v-for="(place, index) in places" :key="index">
+                            <strong>{{ place.place_name }}</strong>
+                            <p>{{ place.address_name }}</p>
+                            <p>{{ place.phone }}</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
+
             <footer>
-                <nav class="botom">
-                    <div class="Bookmark">
+                <nav class="bottom">
+                    <div class="bookmark">
                         <a href="">즐겨찾기</a>
                     </div>
                     <div class="home">
@@ -43,63 +58,113 @@
     </div>
 </template>
 
+
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
-const initMap = () => {
-  if (window.kakao && window.kakao.maps) {
-    var mapContainer = document.getElementById('map');
-    var mapOption = {
-      center: new kakao.maps.LatLng(37.564343, 126.947613),
-      level: 3
-    };
-    var map = new kakao.maps.Map(mapContainer, mapOption);
-
-    var positions = [
-      {
-        latlng: new kakao.maps.LatLng(37.562632898194835, 126.9454282268269)
-      },
-      {
-        latlng: new kakao.maps.LatLng(37.56195884514403, 126.94922601468826)
-      }
-    ];
-
-    positions.forEach(function (pos) {
-      var marker = new kakao.maps.Marker({
-        position: pos.latlng
-      });
-      marker.setMap(map);
-    });
-  } else {
-    const script = document.createElement('script');
-    script.onload = () => kakao.maps.load(initMap);
-    script.src = 'http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=9f647a199751b8c18f579fff34313544';
-    document.head.appendChild(script);
-  }
-};
+const keyword = ref('');
+const places = ref([]);
+const map = ref(null);
+const ps = ref(null);
+const boundsChangedListener = ref(null); // boundsChanged 이벤트 리스너
 
 onMounted(() => {
-  initMap();
+    loadKakaoMapScript();
 });
 
-const search = () => {
-  // 검색 기능 구현
+const loadKakaoMapScript = () => {
+    const script = document.createElement('script');
+    script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=0d81efa0ecfe59e238c0907b1af9c6d7&libraries=services';
+    script.onload = () => {
+        kakao.maps.load(() => {
+            initializeKakaoMap();
+        });
+    };
+    document.head.appendChild(script);
 };
+
+const initializeKakaoMap = () => {
+    const options = {
+        center: new kakao.maps.LatLng(37.5666805, 126.9784147),
+        level: 5
+    };
+    const mapContainer = document.querySelector('.map');
+    if (!mapContainer) return; // map 요소가 없으면 종료
+
+    map.value = new kakao.maps.Map(mapContainer, options);
+    ps.value = new kakao.maps.services.Places(map.value);
+
+    // Kakao 지도 API 로드가 완료된 후에 검색을 진행
+    search();
+
+    // 지도 이벤트 리스너 등록
+    boundsChangedListener.value = kakao.maps.event.addListener(map.value, 'bounds_changed', () => {
+        // bounds가 변경될 때마다 검색을 다시 진행
+        search();
+    });
+};
+
+const search = () => {
+    if (!ps.value) return; // ps가 초기화되지 않은 경우를 방지
+    const bounds = map.value.getBounds(); // 현재 지도의 bounds 가져오기
+    const swLatLng = bounds.getSouthWest(); // 남서쪽 좌표
+    const neLatLng = bounds.getNorthEast(); // 북동쪽 좌표
+
+    // 검색 영역 설정
+    const searchBounds = new kakao.maps.LatLngBounds(swLatLng, neLatLng);
+
+    // 검색 영역 내 음식점 검색
+    ps.value.keywordSearch('음식점', placesSearchCB, {
+        bounds: searchBounds
+    });
+};
+
+const placesSearchCB = (data, status, pagination) => {
+    if (status === kakao.maps.services.Status.OK) {
+        places.value = data;
+        displayPlaces();
+    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        // 검색 결과가 없음
+    } else if (status === kakao.maps.services.Status.ERROR) {
+        // 검색 중 오류 발생
+    }
+};
+
+const displayPlaces = () => {
+    removeAllMarkers(); // 모든 마커를 제거합니다.
+    places.value.forEach(place => {
+        const marker = new kakao.maps.Marker({
+            map: map.value,
+            position: new kakao.maps.LatLng(place.y, place.x)
+        });
+        kakao.maps.event.addListener(marker, 'click', () => {
+            displayPlaceInfo(place);
+        });
+        markers.push(marker);
+    });
+};
+
+const displayPlaceInfo = (place) => {
+    console.log(place);
+};
+
+const removeAllMarkers = () => {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    });
+    markers = [];
+};
+
+let markers = [];
 </script>
+
+<style scoped>
+/* 생략 */
+</style>
 
 
 <style scoped>
-/* 전체 */
-html,
-body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'IBM Plex Sans KR', sans-serif;
-}
-
+/* 스타일 */
 .container {
     display: flex;
     justify-content: center;
@@ -138,12 +203,6 @@ body {
     padding: 0 10px;
 }
 
-.second {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-}
-
 .logo img,
 .gps img {
     width: 30px;
@@ -159,12 +218,12 @@ body {
     display: flex;
 }
 
-.serch {
+.search {
     display: flex;
     align-items: center;
 }
 
-.serch input {
+.search input {
     flex-grow: 1;
     border: 1px solid #000000;
     border-radius: 10px;
@@ -173,7 +232,7 @@ body {
     width: 100%;
 }
 
-.serch .button {
+.search .button {
     background-color: #000000;
     color: white;
     border: none;
@@ -185,7 +244,7 @@ body {
 
 }
 
-.serch .button:hover {
+.search .button:hover {
     background-color: #e68900;
 }
 
@@ -204,22 +263,17 @@ body {
     height: 400px;
 }
 
-.one,
-.two,
-.three {
-    display: flex;
-    justify-content: space-around;
-    margin: 10px 0;
+.marker-list {
+    margin-top: 20px;
 }
 
-.one img,
-.two img,
-.three img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    margin: 15px 20px 15px 20px;
-    padding: 15px 10px 15px 10px;
+.marker-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.marker-list li {
+    margin-bottom: 10px;
 }
 
 /* 풋터 부분 */
@@ -229,7 +283,7 @@ footer {
     background-color: rgb(249, 96, 211);
 }
 
-.botom {
+.bottom {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -238,4 +292,3 @@ footer {
     padding-bottom: 20px;
 }
 </style>
-
