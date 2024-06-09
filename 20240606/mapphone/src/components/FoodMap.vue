@@ -93,7 +93,7 @@ const initializeKakaoMap = () => {
 
   mapInstance = new kakao.maps.Map(mapContainer, options);
   ps.value = new kakao.maps.services.Places(mapInstance);
-
+  
   // 검색 및 마커 표시
   searchPlaces();
 
@@ -108,12 +108,21 @@ const searchPlaces = () => {
 
 const placesSearchCB = (data, status) => {
   if (status === kakao.maps.services.Status.OK) {
+    // 기존 마커들 제거
+    removeAllMarkers();
+
+    // 새로운 검색 결과를 바탕으로 마커 추가
+    data.forEach(place => {
+      displayMarker(place);
+    });
+
+    // 장소 정보 업데이트
     places.value = data;
-    displayPlaces(data);
   } else {
     // 에러 처리
   }
 };
+
 
 const displayPlaces = (places) => {
   removeAllMarkers();
@@ -122,18 +131,37 @@ const displayPlaces = (places) => {
   });
 };
 
+let openedInfowindow = null;
+
 const displayMarker = (place) => {
   const marker = new kakao.maps.Marker({
     map: mapInstance,
-    position: new kakao.maps.LatLng(place.y, place.x)
+    position: new kakao.maps.LatLng(place.y, place.x),
+    place: place // 마커에 장소 정보 추가
   });
 
+  // 마커를 클릭했을 때 이벤트 처리
   kakao.maps.event.addListener(marker, 'click', () => {
-    displayPlaceInfo(place);
+    // 이미 열려있는 인포윈도우가 있으면 닫기
+    if (openedInfowindow) {
+      openedInfowindow.close();
+    }
+
+    // 새로운 인포윈도우 열기
+    const infowindow = new kakao.maps.InfoWindow({
+      content: `<div class="placeinfo">
+                  <div class="title">${place.place_name}</div>
+                  <div class="tel">${place.phone}</div>
+                  <div class="address">${place.address_name}</div>
+                </div>`
+    });
+    infowindow.open(mapInstance, marker);
+    openedInfowindow = infowindow;
   });
 
-  marker.setMap(mapInstance);
+  markers.push(marker);
 };
+
 
 const handleMapDragEnd = () => {
   const bounds = mapInstance.getBounds();
@@ -142,7 +170,9 @@ const handleMapDragEnd = () => {
 
   ps.value.categorySearch('FD6', (data, status) => {
     if (status === kakao.maps.services.Status.OK) {
-      displayPlaces(data);
+      removeAllMarkers(); // 기존 마커 제거
+      places.value = data; // 장소 정보 업데이트
+      displayPlaces(data); // 새로운 마커 표시
     } else {
       // 에러 처리
     }
@@ -150,6 +180,7 @@ const handleMapDragEnd = () => {
     bounds: new kakao.maps.LatLngBounds(swLatLng, neLatLng)
   });
 };
+
 
 const displayPlaceInfo = (place) => {
   // 장소 상세 정보 표시
@@ -265,12 +296,12 @@ let markers = [];
 .totalbody {
   position: relative;
   width: 100%;
-  height: 350px;
+  height: calc(100% - 300px); /* Footer의 높이만큼 제외한 높이 */
+  overflow: auto; /* 리스트가 화면을 벗어날 경우 스크롤바 표시 */
 }
-
 .map {
   width: 100%;
-  height: 400px;
+  height: 300px;
 }
 
 .placeinfo_wrap {
@@ -347,10 +378,10 @@ let markers = [];
   margin-top: 0;
 }
 
-/* 풋터 부분 */
 footer {
+  width: 100%;
+  height: 15%; /* Footer의 높이 설정 */
   border: 1px solid violet;
-  height: 15%;
   background-color: rgb(249, 96, 211);
 }
 
