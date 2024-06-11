@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { ref, onUpdated, getTransitionRawChildren } from 'vue';
 
-// import Map from '../components/Map.vue'
 import Main from '../components/Main.vue'
 import Login from '../components/Login.vue'
+// import Login from '../components/Loginjson.vue'
 import FoodMap from '../components/FoodMap.vue'
 import Hospitalmap from '../components/Hospital.vue'
+import Bankmap from '../components/bankmap.vue'
+import Cafemap from '../components/cafemap.vue'
+import Pharmacymap from '../components/pharmacymap.vue'
+import Hotelmap from '../components/hotel.vue'
+import Favorites from '../components/Favorites.vue'
 
 
 const router = createRouter({
@@ -20,10 +25,6 @@ const router = createRouter({
       path: "/main",
       name: "main",
       component: Main,
-    //   children:
-    //   [
-
-    // ]
     },
     {
       path: "/main/foodmap",
@@ -35,6 +36,31 @@ const router = createRouter({
       name: "hospitalmap",
       component: Hospitalmap
     },
+    {
+      path: "/main/bankmap",
+      name: "bankmap",
+      component: Bankmap
+    },
+    {
+      path: "/main/cafemap",
+      name: "cafemap",
+      component: Cafemap
+    },    
+    {
+      path: "/main/pharmacymap",
+      name: "pharmacymap",
+      component: Pharmacymap
+    },
+    {
+      path: "/main/hotelmap",
+      name: "hotelmap",
+      component: Hotelmap
+    },
+    {
+      path: "/main/favorites",
+      name: "favorites",
+      component: Favorites
+    }
     // {
     //   // path : 라우트를 호출할 경로를 나타내는 것으로 path에 해당하는 컴포넌트를 routerView로 렌더링한다.
     //   path: "/map",
